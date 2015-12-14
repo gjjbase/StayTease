@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_gravity="bottom"
+    android:gravity="bottom"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/qqz"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/qqz"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/weixinq"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/weixq"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</RelativeLayout>

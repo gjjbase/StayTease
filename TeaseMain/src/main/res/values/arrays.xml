@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="main_menu">
+        <item>新闻</item>
+        <item>美图看看</item>
+        <item>视频播饭</item>
+        <item>音乐欣赏</item>
+        <item>分享</item>
+        <item>联系我们</item>
+    </string-array>
+    <string-array name="photo_menu">
+        <item>大胸妹</item>
+        <item>小清新</item>
+        <item>文艺范</item>
+        <item>性感妹</item>
+        <item>大长腿</item>
+        <item>黑丝袜</item>
+        <item>小翘臀</item>
+    </string-array>
+    <string-array name="photo_menu2">
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+    </string-array>
+    <string-array name="music_menu">
+        <item>本地音乐</item>
+        <item>网络流媒体</item>
+    </string-array>
+</resources>
