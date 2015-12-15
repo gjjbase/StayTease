@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,22 +13,29 @@
  */
 package gjj.staytease.com.chatuidemo.activity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
@@ -37,6 +44,7 @@ import com.easemob.EMEventListener;
 import com.easemob.EMGroupChangeListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.EMValueCallBack;
+import gjj.staytease.com.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
@@ -48,26 +56,18 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.util.EMLog;
-import com.easemob.util.HanziToPinyin;
-import com.easemob.util.NetUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import gjj.staytease.com.R;
-import gjj.staytease.com.applib.controller.HXSDKHelper;
 import gjj.staytease.com.chatuidemo.Constant;
 import gjj.staytease.com.chatuidemo.DemoHXSDKHelper;
+import gjj.staytease.com.R;
 import gjj.staytease.com.chatuidemo.db.InviteMessgeDao;
 import gjj.staytease.com.chatuidemo.db.UserDao;
 import gjj.staytease.com.chatuidemo.domain.InviteMessage;
 import gjj.staytease.com.chatuidemo.domain.InviteMessage.InviteMesageStatus;
 import gjj.staytease.com.chatuidemo.domain.User;
 import gjj.staytease.com.chatuidemo.utils.CommonUtils;
+import com.easemob.util.EMLog;
+import com.easemob.util.HanziToPinyin;
+import com.easemob.util.NetUtils;
 
 public class MainActivity extends BaseActivity implements EMEventListener {
 
@@ -104,10 +104,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
             // 防止被移除后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
             // 三个fragment里加的判断同理
-            DemoHXSDKHelper.getInstance().logout(true, null);
+            DemoHXSDKHelper.getInstance().logout(true,null);
             finish();
             startActivity(new Intent(this, LoginActivity.class));
             return;
@@ -120,6 +121,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         }
         setContentView(R.layout.activity_main2);
         initView();
+
+
 
         if (getIntent().getBooleanExtra("conflict", false) && !isConflictDialogShow) {
             showConflictDialog();
@@ -135,7 +138,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         chatHistoryFragment = new ChatAllHistoryFragment();
         contactListFragment = new ContactlistFragment();
         settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{chatHistoryFragment, contactListFragment, settingFragment};
+        fragments = new Fragment[] { chatHistoryFragment, contactListFragment, settingFragment };
         // 添加显示第一个fragment
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, chatHistoryFragment)
                 .add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(chatHistoryFragment)
@@ -143,7 +146,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
         init();
         //异步获取当前用户的昵称和头像
-        ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
+        ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
     }
 
     private void init() {
@@ -157,10 +160,15 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         groupChangeListener = new MyGroupChangeListener();
         // 注册群聊相关的listener
         EMGroupManager.getInstance().addGroupChangeListener(groupChangeListener);
+
+
+        //内部测试方法，请忽略
+        registerInternalDebugReceiver();
     }
 
 
-    static void asyncFetchGroupsFromServer() {
+
+    static void asyncFetchGroupsFromServer(){
         HXSDKHelper.getInstance().asyncFetchGroupsFromServer(new EMCallBack() {
 
             @Override
@@ -185,7 +193,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         });
     }
 
-    static void asyncFetchContactsFromServer() {
+    static void asyncFetchContactsFromServer(){
         HXSDKHelper.getInstance().asyncFetchContactsFromServer(new EMValueCallBack<List<String>>() {
 
             @Override
@@ -267,7 +275,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         });
     }
 
-    static void asyncFetchBlackListFromServer() {
+    static void asyncFetchBlackListFromServer(){
         HXSDKHelper.getInstance().asyncFetchBlackListFromServer(new EMValueCallBack<List<String>>() {
 
             @Override
@@ -327,6 +335,36 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         registerForContextMenu(mTabs[1]);
     }
 
+    /**
+     * button点击事件
+     *
+     * @param view
+     */
+    public void onTabClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_conversation:
+                index = 0;
+                break;
+            case R.id.btn_address_list:
+                index = 1;
+                break;
+            case R.id.btn_setting:
+                index = 2;
+                break;
+        }
+        if (currentTabIndex != index) {
+            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+            trx.hide(fragments[currentTabIndex]);
+            if (!fragments[index].isAdded()) {
+                trx.add(R.id.fragment_container, fragments[index]);
+            }
+            trx.show(fragments[index]).commit();
+        }
+        mTabs[currentTabIndex].setSelected(false);
+        // 把当前tab设为选中状态
+        mTabs[index].setSelected(true);
+        currentTabIndex = index;
+    }
 
     /**
      * 监听事件
@@ -389,14 +427,18 @@ public class MainActivity extends BaseActivity implements EMEventListener {
             conflictBuilder = null;
         }
 
-        if (connectionListener != null) {
+        if(connectionListener != null){
             EMChatManager.getInstance().removeConnectionListener(connectionListener);
         }
 
-        if (groupChangeListener != null) {
+        if(groupChangeListener != null){
             EMGroupManager.getInstance().removeGroupChangeListener(groupChangeListener);
         }
 
+        try {
+            unregisterReceiver(internalDebugReceiver);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -437,8 +479,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
      */
     public int getUnreadAddressCountTotal() {
         int unreadAddressCountTotal = 0;
-        if (((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME) != null)
-            unreadAddressCountTotal = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME)
+        if (((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME) != null)
+            unreadAddressCountTotal = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME)
                     .getUnreadMsgCount();
         return unreadAddressCountTotal;
     }
@@ -452,11 +494,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         int unreadMsgCountTotal = 0;
         int chatroomUnreadMsgCount = 0;
         unreadMsgCountTotal = EMChatManager.getInstance().getUnreadMsgsCount();
-        for (EMConversation conversation : EMChatManager.getInstance().getAllConversations().values()) {
-            if (conversation.getType() == EMConversationType.ChatRoom)
-                chatroomUnreadMsgCount = chatroomUnreadMsgCount + conversation.getUnreadMsgCount();
+        for(EMConversation conversation:EMChatManager.getInstance().getAllConversations().values()){
+            if(conversation.getType() == EMConversationType.ChatRoom)
+                chatroomUnreadMsgCount=chatroomUnreadMsgCount+conversation.getUnreadMsgCount();
         }
-        return unreadMsgCountTotal - chatroomUnreadMsgCount;
+        return unreadMsgCountTotal-chatroomUnreadMsgCount;
     }
 
     private InviteMessgeDao inviteMessgeDao;
@@ -464,13 +506,14 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     /***
      * 好友变化listener
+     *
      */
     public class MyContactListener implements EMContactListener {
 
         @Override
         public void onContactAdded(List<String> usernameList) {
             // 保存增加的联系人
-            Map<String, User> localUsers = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList();
+            Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
             Map<String, User> toAddUsers = new HashMap<String, User>();
             for (String username : usernameList) {
                 User user = setUserHead(username);
@@ -490,7 +533,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         @Override
         public void onContactDeleted(final List<String> usernameList) {
             // 被删除
-            Map<String, User> localUsers = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList();
+            Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
             for (String username : usernameList) {
                 localUsers.remove(username);
                 userDao.deleteContact(username);
@@ -502,8 +545,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                     String st10 = getResources().getString(R.string.have_you_removed);
                     if (ChatActivity.activityInstance != null
                             && usernameList.contains(ChatActivity.activityInstance.getToChatUsername())) {
-//						Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, 1)
-//								.show();
+//                        Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, 1)
+//                                .show();
                         ChatActivity.activityInstance.finish();
                     }
                     updateUnreadLabel();
@@ -567,6 +610,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     /**
      * 连接监听listener
+     *
      */
     public class MyConnectionListener implements EMConnectionListener {
 
@@ -576,23 +620,23 @@ public class MainActivity extends BaseActivity implements EMEventListener {
             boolean contactSynced = HXSDKHelper.getInstance().isContactsSyncedWithServer();
 
             // in case group and contact were already synced, we supposed to notify sdk we are ready to receive the events
-            if (groupSynced && contactSynced) {
-                new Thread() {
+            if(groupSynced && contactSynced){
+                new Thread(){
                     @Override
-                    public void run() {
+                    public void run(){
                         HXSDKHelper.getInstance().notifyForRecevingEvents();
                     }
                 }.start();
-            } else {
-                if (!groupSynced) {
+            }else{
+                if(!groupSynced){
                     asyncFetchGroupsFromServer();
                 }
 
-                if (!contactSynced) {
+                if(!contactSynced){
                     asyncFetchContactsFromServer();
                 }
 
-                if (!HXSDKHelper.getInstance().isBlackListSyncedWithServer()) {
+                if(!HXSDKHelper.getInstance().isBlackListSyncedWithServer()){
                     asyncFetchBlackListFromServer();
                 }
             }
@@ -660,7 +704,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
             msg.setFrom(inviter);
             msg.setTo(groupId);
             msg.setMsgId(UUID.randomUUID().toString());
-            msg.addBody(new TextMessageBody(inviter + " " + st3));
+            msg.addBody(new TextMessageBody(inviter + " " +st3));
             // 保存邀请消息
             EMChatManager.getInstance().saveMessage(msg);
             // 提醒新消息
@@ -755,7 +799,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
             msg.setFrom(accepter);
             msg.setTo(groupId);
             msg.setMsgId(UUID.randomUUID().toString());
-            msg.addBody(new TextMessageBody(accepter + " " + st4));
+            msg.addBody(new TextMessageBody(accepter + " " +st4));
             // 保存同意消息
             EMChatManager.getInstance().saveMessage(msg);
             // 提醒新消息
@@ -806,7 +850,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         // 保存msg
         inviteMessgeDao.saveMessage(msg);
         // 未读数加1
-        User user = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME);
+        User user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME);
         if (user.getUnreadMsgCount() == 0)
             user.setUnreadMsgCount(user.getUnreadMsgCount() + 1);
     }
@@ -857,7 +901,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
         // register the event listener when enter the foreground
         EMChatManager.getInstance().registerEventListener(this,
-                new EMNotifierEvent.Event[]{EMNotifierEvent.Event.EventNewMessage, EMNotifierEvent.Event.EventOfflineMessage, EMNotifierEvent.Event.EventConversationListChanged});
+                new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage ,EMNotifierEvent.Event.EventOfflineMessage, EMNotifierEvent.Event.EventConversationListChanged});
     }
 
     @Override
@@ -889,13 +933,14 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     private android.app.AlertDialog.Builder accountRemovedBuilder;
     private boolean isConflictDialogShow;
     private boolean isAccountRemovedDialogShow;
+    private BroadcastReceiver internalDebugReceiver;
 
     /**
      * 显示帐号在别处登录dialog
      */
     private void showConflictDialog() {
         isConflictDialogShow = true;
-        DemoHXSDKHelper.getInstance().logout(false, null);
+        DemoHXSDKHelper.getInstance().logout(false,null);
         String st = getResources().getString(R.string.Logoff_notification);
         if (!MainActivity.this.isFinishing()) {
             // clear up global variables
@@ -930,7 +975,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
      */
     private void showAccountRemovedDialog() {
         isAccountRemovedDialogShow = true;
-        DemoHXSDKHelper.getInstance().logout(true, null);
+        DemoHXSDKHelper.getInstance().logout(true,null);
         String st5 = getResources().getString(R.string.Remove_the_notification);
         if (!MainActivity.this.isFinishing()) {
             // clear up global variables
@@ -968,6 +1013,40 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         } else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
             showAccountRemovedDialog();
         }
+    }
+
+    /**
+     * 内部测试代码，开发者请忽略
+     */
+    private void registerInternalDebugReceiver() {
+        internalDebugReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                DemoHXSDKHelper.getInstance().logout(true,new EMCallBack() {
+
+                    @Override
+                    public void onSuccess() {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                // 重新显示登陆页面
+                                finish();
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onProgress(int progress, String status) {}
+
+                    @Override
+                    public void onError(int code, String message) {}
+                });
+            }
+        };
+        IntentFilter filter = new IntentFilter(getPackageName() + ".em_internal_debug");
+        registerReceiver(internalDebugReceiver, filter);
     }
 
     @Override
