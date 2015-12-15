@@ -3,7 +3,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg" >
+    android:background="@color/common_bg">
 
     <LinearLayout
         android:id="@+id/main_bottom"
@@ -12,13 +12,13 @@
         android:layout_alignParentBottom="true"
         android:background="@color/bottom_bar_normal_bg"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:id="@+id/btn_container_conversation"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/btn_conversation"
@@ -27,8 +27,7 @@
                 android:background="@drawable/main_bottom_item_bg"
                 android:drawableTop="@drawable/tab_chat_bg"
                 android:onClick="onTabClicked"
-                android:paddingBottom="2dip"
-                android:paddingTop="7dip"
+                android:padding="3dp"
                 android:scaleType="matrix"
                 android:text="@string/session"
                 android:textColor="@color/main_botton_text_color"
@@ -53,7 +52,7 @@
             android:id="@+id/btn_container_address_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/btn_address_list"
@@ -62,8 +61,7 @@
                 android:background="@drawable/main_bottom_item_bg"
                 android:drawableTop="@drawable/tab_contact_list_bg"
                 android:onClick="onTabClicked"
-                android:paddingBottom="2dip"
-                android:paddingTop="7dip"
+                android:padding="3dp"
                 android:scaleType="matrix"
                 android:text="@string/address_book"
                 android:textColor="@color/main_botton_text_color"
@@ -83,7 +81,7 @@
             android:id="@+id/btn_container_setting"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/btn_setting"
@@ -92,8 +90,6 @@
                 android:background="@drawable/main_bottom_item_bg"
                 android:drawableTop="@drawable/tab_setting_bg"
                 android:onClick="onTabClicked"
-                android:paddingBottom="2dip"
-                android:paddingTop="7dip"
                 android:scaleType="matrix"
                 android:text="@string/setting"
                 android:textColor="@color/main_botton_text_color"
