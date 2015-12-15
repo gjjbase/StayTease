@@ -39,7 +39,7 @@ public class ApiConstants {
     /**
      * 图片接口
      */
-    public static String NUM ="10";
+    public static String NUM ="30";
     public static String PHOTO_TITLE = "819-1";
     public static String PHOTO_URL = Constants.URL_CONTEXTPATH + PHOTO_TITLE;
     /**

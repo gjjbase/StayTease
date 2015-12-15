@@ -35,9 +35,9 @@ public class PhotoListFragment extends FragmentPresenterImpl<PhotoListViewImpl> 
 
     @Override
     public void onLoadMore() {
-        mView.setIsLoading(true);
-        mView.setPage(mView.getPage() + 1);
-        new PhotoListBiz().setmCallBack(this, getArguments().getString(TYPE), mView.getPage());
+//        mView.setIsLoading(true);
+//        mView.setPage(mView.getPage() + 1);
+//        new PhotoListBiz().setmCallBack(this, getArguments().getString(TYPE), mView.getPage());
     }
 
     @Override

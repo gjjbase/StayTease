@@ -74,7 +74,7 @@ public class PhotoListViewImpl extends ViewImpl implements PhotoListViewInteract
         recyclerView = pulltoload.getRecyclerView();
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
-        pulltoload.isLoadMoreEnabled(true);
+        pulltoload.isLoadMoreEnabled(false);
         recyclerView.setHasFixedSize(false);
         return view;
     }
