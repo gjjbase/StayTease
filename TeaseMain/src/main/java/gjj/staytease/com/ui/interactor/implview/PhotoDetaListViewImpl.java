@@ -41,6 +41,4 @@ public class PhotoDetaListViewImpl extends ViewImpl implements PhotoDetaListInte
     public void setMsg(PhotoDetaListFragment fragment, String img) {
         fragment.startActivity(new Intent(fragment.getActivity(), PhotoBigActivity.class).putExtra("imgurl", img));
     }
-
-
 }

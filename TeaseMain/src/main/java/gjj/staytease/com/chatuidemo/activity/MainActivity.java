@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
         initView();
 
         if (getIntent().getBooleanExtra("conflict", false) && !isConflictDialogShow) {

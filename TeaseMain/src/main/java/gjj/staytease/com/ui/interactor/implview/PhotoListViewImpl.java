@@ -92,6 +92,7 @@ public class PhotoListViewImpl extends ViewImpl implements PhotoListViewInteract
         showapiResBodyEntityList.addAll(photoEntity.getShowapi_res_body());
         photoListAdapter = new PhotoListAdapter(context.getActivity(), showapiResBodyEntityList);
         recyclerView.setAdapter(photoListAdapter);
+        photoListAdapter.notifyDataSetChanged();
         photoListAdapter.setOnItemClickListener2(context);
         if (photoEntity.getShowapi_res_body().size() < 10)
             isHasLoadAll = true;
