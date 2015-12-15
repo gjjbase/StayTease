@@ -121,7 +121,6 @@ public class MainViewImpl extends ViewImpl implements MainViewInteractor {
             case 0:
             case 1:
             case 2:
-            case 3:
                 Fragment fragment = fragments.get(currentTab);
                 FragmentTransaction ft = obtainFragmentTransaction(mainActivity, currentTab);
                 getCurrentFragment().onPause(); // 暂停当前tab

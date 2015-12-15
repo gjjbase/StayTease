@@ -62,9 +62,7 @@ public class MainActivity extends ActivityPresenterImpl<MainViewImpl> implements
             case R.id.nav_slideshow:
                 mView.setMsg(this, 2,R.string.music); // 更新目标tab为当前tab
                 break;
-            case R.id.nav_manage:
-                mView.setMsg(this, 3,R.string.movies); // 更新目标tab为当前tab
-                break;
+
             case R.id.nav_qrcode:
                 mView.setMsg(this, 6,R.string.qrcode); // 更新目标tab为当前tab
                 break;
