@@ -17,7 +17,7 @@ public class MusicInterListBiz implements TCallBack<MusicEntity> {
     public void setmCallBack(MCallBack<MusicEntity> mCallBack, String type) {
         this.mCallBack = mCallBack;
         okhttpUtil = new OkhttpUtil<>(MusicEntity.class);
-        okhttpUtil.weixinLogin(new MainActivity(), type);
+        okhttpUtil.musliclist(new MainActivity(), type);
         okhttpUtil.setTtCallBack(this);
     }
 
